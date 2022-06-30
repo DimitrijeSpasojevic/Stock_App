@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+
+    <TextView
+        android:id="@+id/stockSym"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stock sym: "
+        android:layout_margin="16dp"/>
+    <TextView
+        android:id="@+id/accValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stanje na racunu: "
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnBuy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BUY"
+        android:layout_margin="16dp"/>
+
+
+</LinearLayout>

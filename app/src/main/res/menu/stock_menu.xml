@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/discovery"
+        android:icon="@drawable/ic_baseline_apps_24"
+        android:title="Discovery"  />
+    <item
+        android:id="@+id/portfolio"
+        android:icon="@drawable/ic_baseline_monetization_on_24"
+        android:title="Portfolio" />
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="Account" />
+</menu>
