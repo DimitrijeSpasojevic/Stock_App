@@ -16,4 +16,6 @@ interface PortfolioRepo {
     fun getUserByUserName(userName: String): Observable<UserEntity>
     fun getAllByUserIdAndSymbol(userId: Long, symbol: String): Observable<List<PortfolioEntity>>
     fun deleteByUserIdAndSym(userId: Long, sym: String): Completable
+    fun getAllByUserId(userId: Long): Observable<List<PortfolioEntity>>
+    fun updatePortfolioEntity(userId: Long, symbol: String, newQuantity: Long): Completable
 }

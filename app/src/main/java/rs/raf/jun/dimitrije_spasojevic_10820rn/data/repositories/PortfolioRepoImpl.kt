@@ -41,4 +41,12 @@ class PortfolioRepoImpl (
         return localDataSourceP.deleteByUserIdAndSym(userId, sym)
     }
 
+    override fun getAllByUserId(userId: Long): Observable<List<PortfolioEntity>> {
+        return localDataSourceP.getAllByUserId(userId)
+    }
+
+    override fun updatePortfolioEntity(userId: Long, symbol: String, newQuantity: Long): Completable {
+        return localDataSourceP.updatePortfolioEntity(userId,symbol,newQuantity)
+    }
+
 }

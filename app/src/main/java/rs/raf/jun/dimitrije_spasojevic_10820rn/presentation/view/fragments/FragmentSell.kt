@@ -27,7 +27,6 @@ class FragmentSell : Fragment(R.layout.fragment_sell) {
     private val sharedPref by inject<SharedPreferences>()
     private val prefKeyName = "prefKeyName"
     private val mainViewModel: MainContract.ViewModel by sharedViewModel<MainViewModel>()
-    private lateinit var loggedUser: UserFull
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,40 +46,24 @@ class FragmentSell : Fragment(R.layout.fragment_sell) {
     private fun init() {
         sharedPref.getString(prefKeyName, null)?.let { mainViewModel.getUserByUserName(it) }
         binding.btnSellStock.setOnClickListener{
-            mainViewModel.deleteByUserIdAndSym(1,"T")
-            mainViewModel.updateUser(UserUpdateDto(loggedUser.username,loggedUser.accountValue + 1000, loggedUser.portfolioValue - 10000))
-
+            mainViewModel.updatePortfolioEntity(1,"T",0)
+            mainViewModel.updateUser(UserUpdateDto("Dim",50000.0,777.0))
         }
 
         mainViewModel.portfolioUpdateItemState.observe(viewLifecycleOwner, Observer {
             renderState(it)
         })
         mainViewModel.usersState.observe(viewLifecycleOwner, Observer {
-            if(it is UsersState.Success)
-                loggedUser = it.user
-            renderStateUser(it)
-        })
-    }
-
-    private fun renderStateUser(state: UsersState) {
-        when(state) {
-            is UsersState.Success -> {
-                binding.accValue.text = "Stanje na racunu: " + state.user.accountValue.toString()
-                Toast.makeText(context, "Prodato", Toast.LENGTH_SHORT).show()
+            if(it is UsersState.Success) {
+                binding.accValue.text = "Stanje na racunu: " + it.user.accountValue.toString()
             }
-            is UsersState.Error -> Toast.makeText(context, "Error happened", Toast.LENGTH_SHORT).show()
-        }
+        })
     }
 
     private fun renderState(state: PortfolioStateUpdate) {
         when(state) {
             is PortfolioStateUpdate.Success -> {
-                if(loggedUser == null){
-                    sharedPref.getString(prefKeyName, null)?.let { mainViewModel.getUserByUserName(it) }
-                }
-                mainViewModel.updateUser(UserUpdateDto(loggedUser.username,loggedUser.accountValue + 1000, loggedUser.portfolioValue - 10000))
-                Toast.makeText(context, "Kupljeno", Toast.LENGTH_SHORT).show()
-                mainViewModel.getUserByUserName(loggedUser.username)
+                Toast.makeText(context, "Prodato", Toast.LENGTH_SHORT).show()
             }
             is PortfolioStateUpdate.Error -> Toast.makeText(context, "Error happened", Toast.LENGTH_SHORT).show()
         }

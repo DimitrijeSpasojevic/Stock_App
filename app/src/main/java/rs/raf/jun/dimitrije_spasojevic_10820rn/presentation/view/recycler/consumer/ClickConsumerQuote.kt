@@ -4,7 +4,7 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.Quote
 
 
 class ClickConsumerQuote(
-    val quotes : Quote,
+    val quote : Quote,
 ) {
 
 

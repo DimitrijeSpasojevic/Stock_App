@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,6 +78,7 @@ class FragmentDiscovery : Fragment(R.layout.fragment_discovery) {
 
         binding.listRvQuotes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapterQuotes = QuotesAdapter(QuotesAdapter.OnClickListener {
+            mainViewModel.setSelectedQuote(it.quote)
             loadFragmentWithBack(FragmentDetailQuote())
         })
         binding.listRvQuotes.adapter = adapterQuotes
@@ -107,7 +107,7 @@ class FragmentDiscovery : Fragment(R.layout.fragment_discovery) {
         val jsonString = getJsonDataFromAsset(requireContext(),"getIndexes.json")
 
         val quotes = Gson().fromJson(jsonString, QuotesResponseData::class.java)
-//        Timber.d("QuotesResponseData object: ${quotes.data.quotes}")
+//        Timber.d("QuotesResponseData object: ${quote.data.quote}")
         val quoteList  = quotes.data.quotes
         adapterQuotes.submitList(quoteList)
     }
