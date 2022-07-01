@@ -138,6 +138,22 @@ class MainViewModel(
         subscriptions.add(subscription)
     }
 
+    override fun deleteByUserIdAndSym(userId: Long, symbol: String) {
+        val subscription = portfolioRepo
+            .deleteByUserIdAndSym(userId, symbol)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Timber.e("Uspeh")
+                },
+                {
+                    Timber.e("greska sa prodajom")
+                }
+            )
+        subscriptions.add(subscription)
+    }
+
 
     override fun onCleared() {
         super.onCleared()

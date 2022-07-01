@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkIfUserLog(){
-//        mainViewModel.addUser(User("Dim2","d@gmail2","123123"))
+        mainViewModel.addUser(User("Dim","d@gmail","123123"))
         name = sharedPref.getString(prefKeyName, null)
         if(name == null) {
             loadFragment(LoginFragment())

@@ -16,10 +16,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import rs.raf.jun.dimitrije_spasojevic_10820rn.R
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.NewsResponseData
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.Quote
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.SearchQuote
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.SearchQuotesResponseData
+import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.*
 import rs.raf.jun.dimitrije_spasojevic_10820rn.databinding.FragmentDetailQuoteBinding
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.contract.MainContract
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
@@ -59,6 +56,9 @@ class FragmentDetailQuote : Fragment(R.layout.fragment_detail_quote) {
 
         binding.btnBuy.setOnClickListener{
             loadFragmentWithBack(FragmentBuy())
+        }
+        binding.btnSell.setOnClickListener{
+            loadFragmentWithBack(FragmentSell())
         }
 
 

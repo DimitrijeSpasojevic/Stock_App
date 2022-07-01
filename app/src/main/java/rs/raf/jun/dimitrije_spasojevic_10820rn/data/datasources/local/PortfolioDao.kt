@@ -20,4 +20,7 @@ abstract class PortfolioDao {
     @Insert( onConflict = OnConflictStrategy.REPLACE )
     abstract fun insert(portfolioEntity: PortfolioEntity): Completable
 
+    @Query("DELETE FROM portfolios WHERE userId = :userId AND sym = :sym")
+    abstract fun deleteByUserIdAndSym(userId: Long, sym: String): Completable
+
 }

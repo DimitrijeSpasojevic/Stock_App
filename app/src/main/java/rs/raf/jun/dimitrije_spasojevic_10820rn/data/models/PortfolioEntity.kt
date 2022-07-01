@@ -3,6 +3,7 @@ package rs.raf.jun.dimitrije_spasojevic_10820rn.data.models
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import org.jetbrains.annotations.NotNull
 
 @Entity(
     foreignKeys = [ForeignKey(

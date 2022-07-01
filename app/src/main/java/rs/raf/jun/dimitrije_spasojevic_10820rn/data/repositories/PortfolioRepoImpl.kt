@@ -37,4 +37,8 @@ class PortfolioRepoImpl (
         return localDataSourceP.getAllByUserIdAndSymbol(userId, symbol)
     }
 
+    override fun deleteByUserIdAndSym(userId: Long, sym: String): Completable {
+        return localDataSourceP.deleteByUserIdAndSym(userId, sym)
+    }
+
 }

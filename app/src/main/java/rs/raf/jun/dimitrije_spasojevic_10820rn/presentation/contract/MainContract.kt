@@ -25,6 +25,7 @@ interface MainContract {
         fun getUserByUserName(userName: String)
         fun getAllByUserIdAndSymbol(userId: Long, symbol: String)
         fun insertPortfolioItem(portfolioItem: PortfolioItem)
+        fun deleteByUserIdAndSym(userId: Long, symbol: String)
     }
 
 }
