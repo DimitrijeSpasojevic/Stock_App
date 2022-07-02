@@ -5,10 +5,7 @@ import io.reactivex.Observable
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.datasources.local.PortfolioDao
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.datasources.local.PortfolioHistoryDao
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.datasources.local.UserDao
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.PortfolioEntity
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.User
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserEntity
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserUpdateDto
+import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.*
 import timber.log.Timber
 
 class PortfolioRepoImpl (
@@ -44,6 +41,14 @@ class PortfolioRepoImpl (
 
     override fun getAllByUserId(userId: Long): Observable<List<PortfolioEntity>> {
         return localDataSourceP.getAllByUserId(userId)
+    }
+
+    override fun getAllPortfolioHistoryByUserId(userId: Long): Observable<List<PortfolioHistoryEntity>> {
+        return localDataSourceH.getAllByUserId(userId)
+    }
+
+    override fun insertPortfolioHistoryEntity(portfolioHistoryEntity: PortfolioHistoryEntity): Completable {
+        return localDataSourceH.insert(portfolioHistoryEntity)
     }
 
 

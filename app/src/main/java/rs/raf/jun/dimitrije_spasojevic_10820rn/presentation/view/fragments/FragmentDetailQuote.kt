@@ -1,6 +1,7 @@
 package rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.fragments
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.gson.Gson
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import rs.raf.jun.dimitrije_spasojevic_10820rn.R
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.*
@@ -29,6 +31,8 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
     private val binding get() = _binding!!
     private  val STOCK_LABEL = "Stock chart"
     private var selectedQuote = quote
+    private val prefUserId = "id"
+    private val sharedPref by inject<SharedPreferences>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,7 +49,8 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
     }
 
     private fun init() {
-        mainViewModel.getAllByUserIdAndSymbol(1,selectedQuote.symbol)
+        var userId = sharedPref.getLong(prefUserId, -1);
+        mainViewModel.getAllByUserIdAndSymbol(userId,selectedQuote.symbol)
         convert()
         mainViewModel.portfolioItemState.observe(viewLifecycleOwner, Observer {
             renderState(it)

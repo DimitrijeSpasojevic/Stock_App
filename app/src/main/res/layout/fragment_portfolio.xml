@@ -7,17 +7,28 @@
     tools:context=".presentation.view.activities.MainActivity">
 
     <TextView
+        android:id="@+id/tw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="POrt!"
-        app:layout_constraintBottom_toTopOf="@+id/listRv"
+        app:layout_constraintBottom_toTopOf="@+id/chartPortfolio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chartPortfolio"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/listRvPort"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tw" />
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listRv"
+        android:id="@+id/listRvPort"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintStart_toStartOf="parent"

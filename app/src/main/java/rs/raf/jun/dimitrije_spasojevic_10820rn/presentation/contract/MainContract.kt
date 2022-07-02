@@ -1,13 +1,8 @@
 package rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.contract
 
 import androidx.lifecycle.LiveData
-import io.reactivex.Completable
-import io.reactivex.Observable
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.*
-import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
-import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioStateUpdate
-import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioUsersItemState
-import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.UsersState
+import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.*
 
 
 interface MainContract {
@@ -17,6 +12,7 @@ interface MainContract {
 
         val usersState: LiveData<UsersState>
         val portfolioItemState: LiveData<PortfolioState>
+        val portfolioHistoryState: LiveData<PortfolioHistoryState>
         val portfolioUpdateItemState: LiveData<PortfolioStateUpdate>
         val portfolioUsersItemState: LiveData<PortfolioUsersItemState>
 
@@ -29,6 +25,8 @@ interface MainContract {
         fun insertPortfolioItem(portfolioItem: PortfolioItem)
         fun deleteByUserIdAndSym(userId: Long, symbol: String)
         fun getAllByUserId(userId: Long)
+        fun getAllPortfolioHistoryByUserId(userId: Long)
+        fun insertPortfolioHistoryEntity(portfolioHistoryItem: PortfolioHistoryItem)
     }
 
 }
