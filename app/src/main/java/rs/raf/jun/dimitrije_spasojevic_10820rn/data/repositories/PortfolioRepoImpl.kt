@@ -9,6 +9,7 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.PortfolioEntity
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.User
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserEntity
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserUpdateDto
+import timber.log.Timber
 
 class PortfolioRepoImpl (
     private val localDataSourceP: PortfolioDao,   //portfolio
@@ -45,8 +46,5 @@ class PortfolioRepoImpl (
         return localDataSourceP.getAllByUserId(userId)
     }
 
-    override fun updatePortfolioEntity(userId: Long, symbol: String, newQuantity: Long): Completable {
-        return localDataSourceP.updatePortfolioEntity(userId,symbol,newQuantity)
-    }
 
 }

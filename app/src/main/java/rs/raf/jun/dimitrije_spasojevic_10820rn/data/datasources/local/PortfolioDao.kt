@@ -14,13 +14,10 @@ abstract class PortfolioDao {
     @Query("SELECT * FROM portfolios WHERE userId LIKE :userId AND sym LIKE :symbol" )
     abstract fun getAllByUserIdAndSymbol(userId: Long, symbol: String): Observable<List<PortfolioEntity>>
 
-    @Query("UPDATE portfolios SET quantity = :newQuantity WHERE userId =:userId AND sym = :symbol")
-    abstract fun updatePortfolioEntity(userId: Long, symbol: String, newQuantity: Long): Completable
-
     @Insert( onConflict = OnConflictStrategy.REPLACE )
     abstract fun insert(portfolioEntity: PortfolioEntity): Completable
 
-    @Query("DELETE FROM portfolios WHERE userId = :userId AND sym = :sym")
+    @Query("DELETE FROM portfolios WHERE id IN (SELECT id FROM portfolios WHERE sym = :sym AND userId = :userId LIMIT 1)")
     abstract fun deleteByUserIdAndSym(userId: Long, sym: String): Completable
 
 }

@@ -18,5 +18,4 @@ data class PortfolioEntity (
     val id: Long? = null,
     val sym: String,
     val userId: Long,
-    val quantity: Long,
 )

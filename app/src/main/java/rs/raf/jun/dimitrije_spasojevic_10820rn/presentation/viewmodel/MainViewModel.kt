@@ -12,6 +12,7 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.data.repositories.PortfolioRepo
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.contract.MainContract
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioStateUpdate
+import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioUsersItemState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.UsersState
 import rs.raf.rafstudenthelper.data.models.Resource
 import timber.log.Timber
@@ -22,9 +23,9 @@ class MainViewModel(
 ) : ViewModel(),MainContract.ViewModel {
 
 
-    override val selectedQuote:  MutableLiveData<Quote> = MutableLiveData()
     override val usersState: MutableLiveData<UsersState> = MutableLiveData()
     override val portfolioItemState: MutableLiveData<PortfolioState> = MutableLiveData()
+    override val portfolioUsersItemState: MutableLiveData<PortfolioUsersItemState> = MutableLiveData()
     override val portfolioUpdateItemState: MutableLiveData<PortfolioStateUpdate> = MutableLiveData()
 
     private val subscriptions = CompositeDisposable()
@@ -88,22 +89,6 @@ class MainViewModel(
         subscriptions.add(subscription)
     }
 
-    override fun updatePortfolioEntity(userId: Long, symbol: String, newQuantity: Long) {
-        val subscription = portfolioRepo
-            .updatePortfolioEntity(userId,symbol,newQuantity)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    portfolioUpdateItemState.value = PortfolioStateUpdate.Success
-                },
-                {
-                    portfolioUpdateItemState.value = PortfolioStateUpdate.Error("Error sa portfoliom")
-                }
-            )
-        subscriptions.add(subscription)
-    }
-
     override fun getUserByUserName(userName: String) {
         val subscription = portfolioRepo
             .getUserByUserName(userName)
@@ -128,10 +113,10 @@ class MainViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    var portfolioItems = it.map {
-                        PortfolioItem(it.sym,it.userId,it.quantity)
+                    var list = it.map {
+                        PortfolioItem(it.sym,it.userId)
                     }
-                    portfolioItemState.value = PortfolioState.Success(portfolioItems)
+                    portfolioItemState.value = PortfolioState.Success(list)
                 },
                 {
                     portfolioItemState.value = PortfolioState.Error("Error sa portfoliom")
@@ -140,9 +125,9 @@ class MainViewModel(
         subscriptions.add(subscription)
     }
 
-//    override fun insertPortfolioItem(portfolioItem: PortfolioItem) {
+//    override fun insertPortfolioItem(portfolioItems: PortfolioItem) {
 //        val subscription = portfolioRepo
-//            .getAllByUserIdAndSymbol(portfolioItem.userId, portfolioItem.sym)
+//            .getAllByUserIdAndSymbol(portfolioItems.userId, portfolioItems.sym)
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
 //            .subscribe(
@@ -152,7 +137,7 @@ class MainViewModel(
 //                    }
 //                    if(portfolioItems.isEmpty()){
 //                        val subscription2 = portfolioRepo
-//                        .insertPortfolioItem(PortfolioEntity(sym = portfolioItem.sym, userId = portfolioItem.userId, quantity = 1))
+//                        .insertPortfolioItem(PortfolioEntity(sym = portfolioItems.sym, userId = portfolioItems.userId, quantity = 1))
 //                        .subscribeOn(Schedulers.io())
 //                        .observeOn(AndroidSchedulers.mainThread())
 //                        .subscribe(
@@ -165,7 +150,7 @@ class MainViewModel(
 //                        )
 //                    subscriptions.add(subscription2)
 //                    }else{
-//                       updatePortfolioEntity(portfolioItem.userId,portfolioItem.sym,portfolioItem.quantity + 1)
+//                       updatePortfolioEntity(portfolioItems.userId,portfolioItems.sym,portfolioItems.quantity + 1)
 //                    }
 //                },
 //                {
@@ -199,25 +184,21 @@ class MainViewModel(
             .subscribe(
                 {
                     var portfolioItems = it.map {
-                        PortfolioItem(it.sym,it.userId,it.quantity)
+                        PortfolioItem(it.sym,it.userId)
                     }
-                    portfolioItemState.value = PortfolioState.Success(portfolioItems)
+                    portfolioUsersItemState.value = PortfolioUsersItemState.Success(portfolioItems)
                 },
                 {
-                    portfolioItemState.value = PortfolioState.Error("Error sa portfoliom")
+                    portfolioUsersItemState.value = PortfolioUsersItemState.Error("Error sa portfoliom")
                 }
             )
         subscriptions.add(subscription)
     }
 
-    override fun setSelectedQuote(quote: Quote) {
-        selectedQuote.value = quote
-    }
-
 
     override fun insertPortfolioItem(portfolioItem: PortfolioItem) {
         val subscription = portfolioRepo
-            .insertPortfolioItem(PortfolioEntity(sym = portfolioItem.sym, userId = portfolioItem.userId, quantity = 1))
+            .insertPortfolioItem(PortfolioEntity(sym = portfolioItem.sym, userId = portfolioItem.userId))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

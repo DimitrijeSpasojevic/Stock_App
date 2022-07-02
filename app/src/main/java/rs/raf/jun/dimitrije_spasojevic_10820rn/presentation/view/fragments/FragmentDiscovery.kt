@@ -78,8 +78,7 @@ class FragmentDiscovery : Fragment(R.layout.fragment_discovery) {
 
         binding.listRvQuotes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapterQuotes = QuotesAdapter(QuotesAdapter.OnClickListener {
-            mainViewModel.setSelectedQuote(it.quote)
-            loadFragmentWithBack(FragmentDetailQuote())
+            loadFragmentWithBack(FragmentDetailQuote(it.quote))
         })
         binding.listRvQuotes.adapter = adapterQuotes
     }

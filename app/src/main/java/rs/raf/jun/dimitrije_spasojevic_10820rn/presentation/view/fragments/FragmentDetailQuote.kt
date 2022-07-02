@@ -1,8 +1,6 @@
 package rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.fragments
 
 import android.content.Context
-import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,24 +18,23 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.*
 import rs.raf.jun.dimitrije_spasojevic_10820rn.databinding.FragmentDetailQuoteBinding
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.contract.MainContract
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
-import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.UsersState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.viewmodel.MainViewModel
 import timber.log.Timber
 import java.io.IOException
-import kotlin.text.Typography.quote
 
-class FragmentDetailQuote : Fragment(R.layout.fragment_detail_quote) {
+class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quote) {
 
     private var _binding: FragmentDetailQuoteBinding? = null
     private val mainViewModel: MainContract.ViewModel by sharedViewModel<MainViewModel>()
     private val binding get() = _binding!!
     private  val STOCK_LABEL = "Stock chart"
-
+    private var selectedQuote = quote
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         _binding = FragmentDetailQuoteBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,17 +45,17 @@ class FragmentDetailQuote : Fragment(R.layout.fragment_detail_quote) {
     }
 
     private fun init() {
-        mainViewModel.getAllByUserIdAndSymbol(1,"T")
+        mainViewModel.getAllByUserIdAndSymbol(1,selectedQuote.symbol)
         convert()
         mainViewModel.portfolioItemState.observe(viewLifecycleOwner, Observer {
             renderState(it)
         })
 
-        binding.btnBuy.setOnClickListener{
-            loadFragmentWithBack(FragmentBuy())
+        binding.goToBuyBtn.setOnClickListener{
+            loadFragmentWithBack(FragmentBuy(quote = selectedQuote))
         }
         binding.btnSell.setOnClickListener{
-            loadFragmentWithBack(FragmentSell())
+            loadFragmentWithBack(FragmentSell(quote = selectedQuote))
         }
 
 
@@ -66,10 +63,10 @@ class FragmentDetailQuote : Fragment(R.layout.fragment_detail_quote) {
     private fun renderState(state: PortfolioState) {
         when(state) {
             is PortfolioState.Success -> {
+                Timber.e("Items: " + state.portfolioItems)
                 if(state.portfolioItems.isEmpty()){
                     binding.btnSell.visibility = View.INVISIBLE
                 }
-
             }
             is PortfolioState.Error -> Toast.makeText(context, "Error happened", Toast.LENGTH_SHORT).show()
             is PortfolioState.DataFetched-> Toast.makeText(context, "DataFetched happened", Toast.LENGTH_SHORT).show()

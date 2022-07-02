@@ -10,22 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.core.KoinApplication.Companion.init
 import rs.raf.jun.dimitrije_spasojevic_10820rn.R
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.PortfolioItem
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.Quote
-import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserFull
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserUpdateDto
 import rs.raf.jun.dimitrije_spasojevic_10820rn.databinding.FragmentBuyBinding
-import rs.raf.jun.dimitrije_spasojevic_10820rn.databinding.FragmentProfileBinding
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.contract.MainContract
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioStateUpdate
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.UsersState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.viewmodel.MainViewModel
-import java.util.*
 
-class FragmentBuy : Fragment(R.layout.fragment_buy) {
+class FragmentBuy(quote: Quote) : Fragment(R.layout.fragment_buy) {
 
     private var _binding: FragmentBuyBinding? = null
 
@@ -33,7 +29,7 @@ class FragmentBuy : Fragment(R.layout.fragment_buy) {
     private val sharedPref by inject<SharedPreferences>()
     private val prefKeyName = "prefKeyName"
     private val mainViewModel: MainContract.ViewModel by sharedViewModel<MainViewModel>()
-
+    private val selectedQuote = quote
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,24 +45,14 @@ class FragmentBuy : Fragment(R.layout.fragment_buy) {
     }
 
     private fun init() {
-        lateinit var selectedQuote: Quote
-        var hasItems = false
         sharedPref.getString(prefKeyName, null)?.let { mainViewModel.getUserByUserName(it) }
-        mainViewModel.selectedQuote.observe(viewLifecycleOwner, Observer{
-            selectedQuote = it
-        })
         mainViewModel.getAllByUserIdAndSymbol(1,selectedQuote.symbol)
-        binding.btnBuy.setOnClickListener{
-            if(hasItems){
-                mainViewModel.updatePortfolioEntity(1,selectedQuote.symbol,3)
-            }else{
-                mainViewModel.insertPortfolioItem(PortfolioItem(selectedQuote.symbol,1,1))
-            }
+        binding.btnBuyBuy.setOnClickListener{
+            mainViewModel.insertPortfolioItem(PortfolioItem(selectedQuote.symbol,1))
             mainViewModel.updateUser(UserUpdateDto("Dim",333.0,444.0))
         }
         mainViewModel.portfolioItemState.observe(viewLifecycleOwner, Observer {
             if(it is PortfolioState.Success){
-                hasItems = it.portfolioItems.isNotEmpty()
             }
         })
 
