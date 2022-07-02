@@ -64,8 +64,8 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
         when(state) {
             is PortfolioState.Success -> {
                 Timber.e("Items: " + state.portfolioItems)
-                if(state.portfolioItems.isEmpty()){
-                    binding.btnSell.visibility = View.INVISIBLE
+                if(state.portfolioItems.isNotEmpty()){
+                    binding.btnSell.visibility = View.VISIBLE
                 }
             }
             is PortfolioState.Error -> Toast.makeText(context, "Error happened", Toast.LENGTH_SHORT).show()

@@ -24,14 +24,13 @@ import java.time.format.DateTimeFormatter
 
 class StockWithNumberViewHolder(private val itemBinding: LayoutItemStockWithNumberBinding) : RecyclerView.ViewHolder(itemBinding.root) {
 
-    private  val STOCK_LABEL = "Stock chart"
 
     var cardStock = itemBinding.cardStock
-    var lineChart = itemBinding.chart
 
     fun bind(quote: QuoteForPortFolio) {
         with(itemBinding){
             stockSymbol.text = quote.symbol
+            num.text = quote.quantity.toString()
         }
     }
 

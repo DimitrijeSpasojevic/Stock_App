@@ -17,6 +17,7 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.recycler.adapte
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioUsersItemState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.viewmodel.MainViewModel
+import timber.log.Timber
 
 class FragmentPortfolio : Fragment(R.layout.fragment_portfolio) {
 
@@ -40,12 +41,17 @@ class FragmentPortfolio : Fragment(R.layout.fragment_portfolio) {
     }
 
     private fun init() {
+        initRecycler()
 
         mainViewModel.getAllByUserId(1)
         mainViewModel.portfolioUsersItemState.observe(viewLifecycleOwner, Observer {
             renderState(it)
         })
 
+
+    }
+
+    private fun initRecycler() {
         binding.listRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter = QuotesWithNumberAdapter(QuotesWithNumberAdapter.OnClickListener {
 
@@ -56,10 +62,13 @@ class FragmentPortfolio : Fragment(R.layout.fragment_portfolio) {
     private fun renderState(state: PortfolioUsersItemState) {
         when(state) {
             is PortfolioUsersItemState.Success -> {
-//                var quotes = state.portfolioItems.map {
-//                    QuoteForPortFolio(it.sym,it.userId)
-//                }
-//                adapter.submitList(quotes)
+                Timber.e("RADI: " + state.portfolioItems)
+                var quotes = state.portfolioItems
+                var filteredMap = quotes.groupingBy { it }.eachCount().filter { it.value > 0 }
+                val listQuoteForPortfolio: MutableList<QuoteForPortFolio> = mutableListOf()
+                    filteredMap.forEach { (key, value) -> listQuoteForPortfolio.add(QuoteForPortFolio(key.sym,1,value.toLong()))}
+
+                adapter.submitList(listQuoteForPortfolio)
             }
             is PortfolioUsersItemState.Error -> Toast.makeText(context, "Error happened", Toast.LENGTH_SHORT).show()
             is PortfolioUsersItemState.DataFetched-> Toast.makeText(context, "DataFetched happened", Toast.LENGTH_SHORT).show()
