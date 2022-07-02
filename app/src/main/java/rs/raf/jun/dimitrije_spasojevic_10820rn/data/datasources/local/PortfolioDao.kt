@@ -20,4 +20,7 @@ abstract class PortfolioDao {
     @Query("DELETE FROM portfolios WHERE id IN (SELECT id FROM portfolios WHERE sym = :sym AND userId = :userId LIMIT 1)")
     abstract fun deleteByUserIdAndSym(userId: Long, sym: String): Completable
 
+    @Query("DELETE FROM portfolios WHERE sym = :sym AND userId = :userId")
+    abstract fun deleteAllByUserIdAndSym(userId: Long, sym: String): Completable
+
 }

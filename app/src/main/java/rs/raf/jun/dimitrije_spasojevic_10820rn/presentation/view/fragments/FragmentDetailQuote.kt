@@ -2,6 +2,7 @@ package rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.fragments
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.Portfoli
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.viewmodel.MainViewModel
 import timber.log.Timber
 import java.io.IOException
+import kotlin.text.Typography.quote
 
 class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quote) {
 
@@ -49,6 +51,8 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
     }
 
     private fun init() {
+        binding.symbol.text = "Symbol: " + selectedQuote.symbol
+        binding.price.text = "Price: " + selectedQuote.last.toString() + " - " + selectedQuote.currency
         var userId = sharedPref.getLong(prefUserId, -1);
         mainViewModel.getAllByUserIdAndSymbol(userId,selectedQuote.symbol)
         convert()
@@ -87,8 +91,6 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
         Timber.d("Data object: ${quote.data}")
         var searchQuote = quote.data
         with(binding){
-            symbol.text = "Symbol: " + searchQuote.symbol
-            price.text = "Price: " + searchQuote.last.toString() + " - " + searchQuote.currency
             open.text = "open: " + searchQuote.open.toString()
             bid.text = "bid: " + searchQuote.bid.toString()
             close.text = "close: " + searchQuote.close.toString()
@@ -98,11 +100,10 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
             beta.text = "beta: " + searchQuote.metrics.beta.toString()
         }
 
-        setLineChartData(searchQuote)
+        setLineChartData(selectedQuote.chart.bars)
     }
 
-    fun setLineChartData(quote: SearchQuote){
-        val bars = quote.chart.bars
+    fun setLineChartData(bars: List<Bar>){
         val dayData = mutableListOf<Entry>()
 
         var i = 0f
@@ -112,11 +113,11 @@ class FragmentDetailQuote(quote: Quote) : Fragment(R.layout.fragment_detail_quot
         }
 
         val lineDataSet = LineDataSet(dayData,STOCK_LABEL)
-//        if(quote.changeFromPreviousClose < 0){
-//            lineDataSet.setColor(Color.RED)
-//        }else{
-//            lineDataSet.setColor(Color.GREEN)
-//        }
+        if(selectedQuote.changeFromPreviousClose < 0){
+            lineDataSet.setColor(Color.RED)
+        }else{
+            lineDataSet.setColor(Color.GREEN)
+        }
         val lineData: LineData = LineData(lineDataSet)
 
         binding.chartDetail.description.isEnabled = false

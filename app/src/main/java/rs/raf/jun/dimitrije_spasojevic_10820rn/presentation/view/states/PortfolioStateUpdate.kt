@@ -6,6 +6,6 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserUpdateDto
 
 
 sealed class PortfolioStateUpdate {
-    object Success: PortfolioStateUpdate()
+    data class Success(val msgFromWhere: String): PortfolioStateUpdate()
     data class Error(val message: String): PortfolioStateUpdate()
 }

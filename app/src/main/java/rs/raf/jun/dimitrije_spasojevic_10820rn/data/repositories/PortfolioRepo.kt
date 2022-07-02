@@ -16,4 +16,5 @@ interface PortfolioRepo {
     fun getAllByUserId(userId: Long): Observable<List<PortfolioEntity>>
     fun getAllPortfolioHistoryByUserId(userId: Long): Observable<List<PortfolioHistoryEntity>>
     fun insertPortfolioHistoryEntity(portfolioHistoryEntity: PortfolioHistoryEntity): Completable
+    fun deleteAllByUserIdAndSym(userId: Long, sym: String):Completable
 }

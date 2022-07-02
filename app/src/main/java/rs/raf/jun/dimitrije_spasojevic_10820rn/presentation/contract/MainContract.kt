@@ -27,6 +27,7 @@ interface MainContract {
         fun getAllByUserId(userId: Long)
         fun getAllPortfolioHistoryByUserId(userId: Long)
         fun insertPortfolioHistoryEntity(portfolioHistoryItem: PortfolioHistoryItem)
+        fun deleteAllByUserIdAndSym(userId: Long, sym: String)
     }
 
 }

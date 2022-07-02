@@ -51,5 +51,9 @@ class PortfolioRepoImpl (
         return localDataSourceH.insert(portfolioHistoryEntity)
     }
 
+    override fun deleteAllByUserIdAndSym(userId: Long, sym: String): Completable {
+        return localDataSourceP.deleteAllByUserIdAndSym(userId,sym)
+    }
+
 
 }

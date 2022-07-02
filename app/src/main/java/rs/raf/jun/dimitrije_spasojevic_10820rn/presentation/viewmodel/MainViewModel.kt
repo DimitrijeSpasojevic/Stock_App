@@ -130,7 +130,7 @@ class MainViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    portfolioUpdateItemState.value = PortfolioStateUpdate.Success
+                    portfolioUpdateItemState.value = PortfolioStateUpdate.Success("delOne")
                 },
                 {
                     portfolioUpdateItemState.value = PortfolioStateUpdate.Error("Error")
@@ -190,6 +190,22 @@ class MainViewModel(
         subscriptions.add(subscription)
     }
 
+    override fun deleteAllByUserIdAndSym(userId: Long, sym: String) {
+        val subscription = portfolioRepo
+            .deleteAllByUserIdAndSym(userId, sym)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    portfolioUpdateItemState.value = PortfolioStateUpdate.Success("deleteAll")
+                },
+                {
+                    portfolioUpdateItemState.value = PortfolioStateUpdate.Error("err pri brisanju svih")
+                }
+            )
+        subscriptions.add(subscription)
+    }
+
 
     override fun insertPortfolioItem(portfolioItem: PortfolioItem) {
         val subscription = portfolioRepo
@@ -198,7 +214,7 @@ class MainViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    portfolioUpdateItemState.value = PortfolioStateUpdate.Success
+                    portfolioUpdateItemState.value = PortfolioStateUpdate.Success("Insert")
                 },
                 {
                     portfolioUpdateItemState.value = PortfolioStateUpdate.Error("Error sa portfoliom")

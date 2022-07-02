@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkIfUserLog(){
-//        mainViewModel.addUser(User("d","d","123123"))
+        mainViewModel.addUser(User("d","d","123123"))
         name = sharedPref.getString(prefKeyName, null)
         if(name == null) {
             loadFragment(LoginFragment())

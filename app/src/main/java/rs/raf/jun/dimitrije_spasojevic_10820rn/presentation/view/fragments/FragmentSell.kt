@@ -18,9 +18,11 @@ import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.Quote
 import rs.raf.jun.dimitrije_spasojevic_10820rn.data.models.UserUpdateDto
 import rs.raf.jun.dimitrije_spasojevic_10820rn.databinding.FragmentSellBinding
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.contract.MainContract
+import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.PortfolioStateUpdate
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.view.states.UsersState
 import rs.raf.jun.dimitrije_spasojevic_10820rn.presentation.viewmodel.MainViewModel
+import timber.log.Timber
 import java.sql.Date
 import java.time.LocalDate
 
@@ -55,14 +57,33 @@ class FragmentSell(quote: Quote) : Fragment(R.layout.fragment_sell) {
         var acc:Double = 0.0
         var port:Double = 0.0
         var username = ""
+        var numberOfStocksToSell = 0
+        var totalNumberOfStockWithSym = 0
         var userId = sharedPref.getLong(prefUserId, -1);
         sharedPref.getString(prefKeyName, null)?.let { mainViewModel.getUserByUserName(it) }
+        mainViewModel.portfolioItemState.observe(viewLifecycleOwner, Observer{
+            if (it is PortfolioState.Success)
+                totalNumberOfStockWithSym = it.portfolioItems.size
+        })
+        binding.stockName.text = "Stock name " + selectedQuote.name
+        binding.tglTitle.text = "Sell all stocks with symbol - " + selectedQuote.symbol
+
+        binding.tglSellAll.setOnClickListener{
+            if(binding.tglSellAll.isChecked){
+                binding.inputStockNumber.visibility = View.INVISIBLE
+                mainViewModel.deleteAllByUserIdAndSym(userId,selectedQuote.symbol)
+                Toast.makeText(context, "Prodato " + totalNumberOfStockWithSym  + " deonica sa simbolom " + selectedQuote.symbol, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.btnSellStock.setOnClickListener{
-            mainViewModel.deleteByUserIdAndSym(userId ,selectedQuote.symbol)
+            numberOfStocksToSell = binding.inputStockNumber.text.toString().toInt()
+            for (i in 0 until numberOfStocksToSell)
+                mainViewModel.deleteByUserIdAndSym(userId ,selectedQuote.symbol)
         }
 
         mainViewModel.portfolioUpdateItemState.observe(viewLifecycleOwner, Observer {
-            renderState(it , username,port,acc)
+            renderState(it ,username, port, acc, numberOfStocksToSell, totalNumberOfStockWithSym)
         })
         mainViewModel.usersState.observe(viewLifecycleOwner, Observer {
             if(it is UsersState.Success) {
@@ -78,11 +99,16 @@ class FragmentSell(quote: Quote) : Fragment(R.layout.fragment_sell) {
         })
     }
 
-    private fun renderState(state: PortfolioStateUpdate, username:String, port:Double ,acc: Double) {
+    private fun renderState(state: PortfolioStateUpdate, username:String, port:Double ,acc: Double,numberOfStocksToSell: Int, totalNumOfStocks: Int) {
         when(state) {
             is PortfolioStateUpdate.Success -> {
-                Toast.makeText(context, "Prodato", Toast.LENGTH_SHORT).show()
-                mainViewModel.updateUser(UserUpdateDto(username,acc + selectedQuote.last,port - selectedQuote.last))
+                if(state.msgFromWhere == "deleteAll"){
+                    Toast.makeText(context, "Prodato svih " + totalNumOfStocks + " deonica", Toast.LENGTH_SHORT).show()
+                    mainViewModel.updateUser(UserUpdateDto(username,acc + (selectedQuote.last * totalNumOfStocks),port - (selectedQuote.last * totalNumOfStocks)))
+                }else{
+                    Toast.makeText(context, "Prodato " + numberOfStocksToSell + " deonica", Toast.LENGTH_SHORT).show()
+                    mainViewModel.updateUser(UserUpdateDto(username,acc + (selectedQuote.last * numberOfStocksToSell),port - (selectedQuote.last * numberOfStocksToSell)))
+                }
             }
             is PortfolioStateUpdate.Error -> Toast.makeText(context, "Error happened", Toast.LENGTH_SHORT).show()
         }
