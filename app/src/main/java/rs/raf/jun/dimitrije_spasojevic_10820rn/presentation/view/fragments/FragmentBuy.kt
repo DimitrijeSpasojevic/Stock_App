@@ -72,9 +72,14 @@ class FragmentBuy(quote: Quote) : Fragment(R.layout.fragment_buy) {
             }catch (ex: Exception){
                 binding.inputMoney.hint = "Morate uneti za koliko novca!"
             }
-            amountOfStocks = kotlin.math.floor(amountOfMoney / selectedQuote.last)
-            for (i in 0 until amountOfStocks.toInt()){
-                mainViewModel.insertPortfolioItem(PortfolioItem(selectedQuote.symbol,userId))
+
+            if(amountOfMoney > acc){
+                Toast.makeText(context, "Nemate dovoljno novca na racunu", Toast.LENGTH_SHORT).show()
+            }else{
+                amountOfStocks = kotlin.math.floor(amountOfMoney / selectedQuote.last)
+                for (i in 0 until amountOfStocks.toInt()){
+                    mainViewModel.insertPortfolioItem(PortfolioItem(selectedQuote.symbol,userId))
+                }
             }
         }
 

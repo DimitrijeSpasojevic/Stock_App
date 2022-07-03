@@ -62,12 +62,13 @@ class FragmentSell(quote: Quote) : Fragment(R.layout.fragment_sell) {
         var userId = sharedPref.getLong(prefUserId, -1);
         sharedPref.getString(prefKeyName, null)?.let { mainViewModel.getUserByUserName(it) }
         mainViewModel.portfolioItemState.observe(viewLifecycleOwner, Observer{
-            if (it is PortfolioState.Success)
+            if (it is PortfolioState.Success){
                 totalNumberOfStockWithSym = it.portfolioItems.size
+                binding.numOfStock.text = "Trenutno imate " + totalNumberOfStockWithSym + " deonica " + selectedQuote.symbol
+            }
         })
         binding.stockName.text = "Stock name " + selectedQuote.name
         binding.tglTitle.text = "Sell all stocks with symbol - " + selectedQuote.symbol
-
         binding.tglSellAll.setOnClickListener{
             if(binding.tglSellAll.isChecked){
                 binding.inputStockNumber.visibility = View.INVISIBLE
@@ -78,8 +79,12 @@ class FragmentSell(quote: Quote) : Fragment(R.layout.fragment_sell) {
 
         binding.btnSellStock.setOnClickListener{
             numberOfStocksToSell = binding.inputStockNumber.text.toString().toInt()
-            for (i in 0 until numberOfStocksToSell)
-                mainViewModel.deleteByUserIdAndSym(userId ,selectedQuote.symbol)
+            if(numberOfStocksToSell > totalNumberOfStockWithSym){
+                Toast.makeText(context, "Trenutno nemate toliko deonica", Toast.LENGTH_SHORT).show()
+            }else{
+                for (i in 0 until numberOfStocksToSell)
+                    mainViewModel.deleteByUserIdAndSym(userId ,selectedQuote.symbol)
+            }
         }
 
         mainViewModel.portfolioUpdateItemState.observe(viewLifecycleOwner, Observer {
